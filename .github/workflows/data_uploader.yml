@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: main
+          ref: development
       - name: Download data
         uses: actions/download-artifact@v1
         with:
@@ -75,10 +75,28 @@ jobs:
 # 本番のcheckout
 # 成果物をコピー
 # push
-  # data_upload_master:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         ref: master
+  data_upload_dev:
+    needs: data_generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: development
+      - name: Download data
+        uses: actions/download-artifact@v1
+        with:
+          name: datajson
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Commit files
+        run: |
+          cp -rp datajson/data.json data/
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/data.json
+          git commit -m "Update Data"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.extract_branch.outputs.branch }}
