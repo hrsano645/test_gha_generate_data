@@ -1,8 +1,8 @@
-name: production deploy
+name: data uploader
 
 on:
   schedule:
-    # * はYAMLに置ける特殊文字なので、この文字列は引用符で囲まなければならない
+    # 15分ごとに試す
     - cron:  '*/15 * * * *'
 
 # データの生成
