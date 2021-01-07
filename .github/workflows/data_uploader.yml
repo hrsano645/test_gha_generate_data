@@ -42,7 +42,7 @@ jobs:
       - name: Upload data.json
         uses: actions/upload-artifact@v1
         with:
-          name: data
+          name: datajson
           path: data.json
 # dev版のcheckout
 # 成果物をコピー
@@ -57,7 +57,7 @@ jobs:
       - name: Download data
         uses: actions/download-artifact@v1
         with:
-          name: data
+          name: datajson
       - name: Commit files
         run: |
           cp -rp data.json data/
