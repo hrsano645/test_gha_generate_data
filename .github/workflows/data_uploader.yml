@@ -1,0 +1,81 @@
+name: production deploy
+
+on:
+  schedule:
+    # * はYAMLに置ける特殊文字なので、この文字列は引用符で囲まなければならない
+    - cron:  '*/15 * * * *'
+
+# データの生成
+jobs:
+  data_generate:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # 生成スクリプトのpull(->master)
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: hrsano645/covid19-gen-datajson-shizuokapref
+          ref: master
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+    # 生成スクリプト用のPython環境作成
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    # 生成スクリプトを実行
+    - name: Generate data.json
+      run:  /usr/bin/env/bash bat.sh
+    # ファイルをアップロード
+      - name: Upload data.json
+        uses: actions/upload-artifact@v1
+        with:
+          name: data
+          path: data.json
+# dev版のcheckout
+# 成果物をコピー
+# push
+  data_upload_dev:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Download data
+        uses: actions/download-artifact@v1
+        with:
+          name: data
+      - name: Commit files
+        run: |
+          cp -rp data.json data/
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/data.json
+          git commit -m "Update Data"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.extract_branch.outputs.branch }}
+# 本番のcheckout
+# 成果物をコピー
+# push
+  # data_upload_master:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         ref: master
