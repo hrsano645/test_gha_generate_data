@@ -38,11 +38,11 @@ jobs:
       - name: Generate data.json
         run:  /usr/bin/env/bash bat.sh
       # ファイルをアップロード
-        - name: Upload data.json
-          uses: actions/upload-artifact@v1
-          with:
-            name: data
-            path: data.json
+      - name: Upload data.json
+        uses: actions/upload-artifact@v1
+        with:
+          name: data
+          path: data.json
 # dev版のcheckout
 # 成果物をコピー
 # push
