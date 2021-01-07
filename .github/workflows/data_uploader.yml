@@ -37,7 +37,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       # 生成スクリプトを実行
       - name: Generate data.json
-        run:  /usr/bin/env/bash bat.sh
+        run:  bash bat.sh
       # ファイルをアップロード
       - name: Upload data.json
         uses: actions/upload-artifact@v1
