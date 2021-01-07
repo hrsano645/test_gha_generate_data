@@ -61,7 +61,7 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
       - name: recode commit time
-        run: echo date > data/brankfile
+        run: echo `date` > data/brankfile
       - name: Commit files
         run: |
           cp -rp datajson/* data/
@@ -73,7 +73,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.extract_branch.outputs.branch }}
+          branch: development
 # 本番のcheckout
 # 成果物をコピー
 # push
@@ -91,7 +91,7 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
       - name: recode commit time
-        run: echo date > data/brankfile
+        run: echo `date` > data/brankfile
       - name: Commit files
         run: |
           cp -rp datajson/* data/
@@ -103,4 +103,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.extract_branch.outputs.branch }}
+          branch: main
