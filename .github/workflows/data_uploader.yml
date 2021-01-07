@@ -60,7 +60,7 @@ jobs:
           name: datajson
       - name: Commit files
         run: |
-          cp -rp data.json data/
+          cp -rp datajson/data.json data/
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data/data.json
