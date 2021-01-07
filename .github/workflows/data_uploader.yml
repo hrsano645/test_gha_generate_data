@@ -75,13 +75,13 @@ jobs:
 # 本番のcheckout
 # 成果物をコピー
 # push
-  data_upload_dev:
+  data_upload_main:
     needs: data_generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: development
+          ref: main
       - name: Download data
         uses: actions/download-artifact@v1
         with:
