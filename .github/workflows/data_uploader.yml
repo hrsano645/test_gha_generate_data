@@ -58,6 +58,8 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: datajson
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Commit files
         run: |
           cp -rp datajson/data.json data/
