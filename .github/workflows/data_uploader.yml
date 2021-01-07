@@ -60,12 +60,14 @@ jobs:
           name: datajson
       - name: Display structure of downloaded files
         run: ls -R
+      - name: recode commit time
+        run: echo date > data/brankfile
       - name: Commit files
         run: |
-          cp -rp datajson/data.json data/
+          cp -rp datajson/* data/
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/data.json
+          git add data/*
           git commit -m "Update Data"
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -88,12 +90,14 @@ jobs:
           name: datajson
       - name: Display structure of downloaded files
         run: ls -R
+      - name: recode commit time
+        run: echo date > data/brankfile
       - name: Commit files
         run: |
-          cp -rp datajson/data.json data/
+          cp -rp datajson/* data/
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data/data.json
+          git add data/*
           git commit -m "Update Data"
       - name: Push changes
         uses: ad-m/github-push-action@master
