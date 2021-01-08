@@ -78,7 +78,7 @@ jobs:
 # 成果物をコピー
 # push
   data_upload_main:
-    needs: data_generate
+    needs: data_upload_dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
