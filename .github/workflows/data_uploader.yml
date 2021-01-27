@@ -48,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ DEVELOPMENT_BRANCH }}
+          ref: ${{ env.DEVELOPMENT_BRANCH }}
       - name: Download data
         uses: actions/download-artifact@v1
         with:
@@ -64,14 +64,14 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ DEVELOPMENT_BRANCH }}
+          branch: ${{ env.DEVELOPMENT_BRANCH }}
   data_upload_master:
     needs: data_upload_development
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ MAIN_BRANCH }}
+          ref: ${{ env.MAIN_BRANCH }}
       - name: Download data
         uses: actions/download-artifact@v1
         with:
@@ -87,4 +87,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ MAIN_BRANCH }}
+          branch: ${{ env.MAIN_BRANCH }}
