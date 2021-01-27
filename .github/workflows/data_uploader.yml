@@ -46,6 +46,8 @@ jobs:
     needs: data_generate
     runs-on: ubuntu-latest
     steps:
+      - name: check env
+        run: echo ${{ env.DEVELOPMENT_BRANCH }}
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.DEVELOPMENT_BRANCH }}
@@ -71,6 +73,8 @@ jobs:
     needs: data_upload_development
     runs-on: ubuntu-latest
     steps:
+      - name: check env
+        run: echo ${{ env.DEVELOPMENT_BRANCH }}
       - uses: actions/checkout@v2
         with:
           ref: ${{ env.MAIN_BRANCH }}
