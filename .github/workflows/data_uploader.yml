@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      MAIN_BRANCH: "master"
+      MAIN_BRANCH: "main"
       DEVELOPMENT_BRANCH: "development"
     steps:
       - uses: actions/checkout@v2
