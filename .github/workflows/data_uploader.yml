@@ -71,7 +71,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ env.DEVELOPMENT_BRANCH }}
-  data_upload_master:
+  data_upload_deploy:
     needs: data_upload_development
     runs-on: ubuntu-latest
     steps:
