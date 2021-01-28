@@ -6,18 +6,24 @@ on:
   #   # 15分ごとに試す
   #   - cron:  '*/15 * * * *'
 
+env:
+    MAIN_BRANCH: main
+    DEVELOPMENT_BRANCH: development
+
 # データの生成
 jobs:
   data_generate:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # 生成スクリプトのpull(->master)
+#     env:
+#       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
         with:
           repository: hrsano645/covid19-gen-datajson-shizuokapref
           ref: master
+          fetch-depth: 0
+          token: ${{ secrets.DATA_UPLOAD_PAT }}
+          persist-credentials: false
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -25,8 +31,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      # 生成スクリプト用のPython環境作成
-      - name: Set up Python 3.8
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -35,50 +40,72 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      # 生成スクリプトを実行
+      - name: Check pwd ls
+        run: |
+          pwd
+          ls -la
+          git status
       - name: Generate data.json
         run:  bash bat.sh
-      # ファイルをアップロード
       - name: Upload data.json
         uses: actions/upload-artifact@v1
         with:
           name: datajson
           path: data.json
-# dev版のcheckout
-# 成果物をコピー
-# push
-  data_upload_dev:
+  data_upload_development:
     needs: data_generate
     runs-on: ubuntu-latest
     steps:
+      - name: check env
+        run: echo ${{ env.DEVELOPMENT_BRANCH }}
       - uses: actions/checkout@v2
         with:
-          ref: main
+          ref: ${{ env.DEVELOPMENT_BRANCH }}
+          fetch-depth: 0
+          token: ${{ secrets.DATA_UPLOAD_PAT }}
+          persist-credentials: false
       - name: Download data
         uses: actions/download-artifact@v1
         with:
           name: datajson
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: recode commit time
+        run: echo `date` > data/auto_generate_time
       - name: Commit files
         run: |
-          cp -rp datajson/data.json data/
-          git config --local user.email "action@github.com"
+          cp -rp datajson/* data/
+          git config --local user.email "hrsano645@users.noreply.github.com"
           git config --local user.name "GitHub Action"
-          git add data/data.json
-          git commit -m "Update Data"
+          git add data/*
+          git commit -m "Auto Update Data"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.extract_branch.outputs.branch }}
-# 本番のcheckout
-# 成果物をコピー
-# push
-  # data_upload_master:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         ref: master
+          github_token: ${{ secrets.DATA_UPLOAD_PAT }}
+          branch: ${{ env.DEVELOPMENT_BRANCH }}
+#   data_upload_deploy:
+#     needs: data_upload_development
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: check env
+#         run: echo ${{ env.DEVELOPMENT_BRANCH }}
+#       - uses: actions/checkout@v2
+#         with:
+#           ref: ${{ env.MAIN_BRANCH }}
+#       - name: Download data
+#         uses: actions/download-artifact@v1
+#         with:
+#           name: datajson
+#       - name: recode commit time
+#         run: echo `date` > data/auto_generate_time
+#       - name: Commit files
+#         run: |
+#           cp -rp datajson/* data/
+#           git config --local user.email "action@github.com"
+#           git config --local user.name "GitHub Action"
+#           git add data/*
+#           git commit -m "Auto Update Data"
+#       - name: Push changes
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           branch: ${{ env.MAIN_BRANCH }}
