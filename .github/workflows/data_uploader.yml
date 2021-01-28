@@ -21,6 +21,7 @@ jobs:
         with:
           repository: hrsano645/covid19-gen-datajson-shizuokapref
           ref: master
+          fetch-depth: 0
 #           token: ${{ secrets.DATA_UPLOAD_PAT }}
 #           persist-credentials: false
       - name: Cache dependencies
@@ -57,6 +58,7 @@ jobs:
       - uses: actions/checkout@v1
         with:
           ref: ${{ env.DEVELOPMENT_BRANCH }}
+          fetch-depth: 0
 #           token: ${{ secrets.DATA_UPLOAD_PAT }}
 #           persist-credentials: false
       - name: Download data
