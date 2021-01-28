@@ -1,4 +1,4 @@
-name: data uploader development
+name: data uploader
 
 on:
   workflow_dispatch:
