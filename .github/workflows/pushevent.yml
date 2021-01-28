@@ -1,0 +1,13 @@
+name: push event
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: push_nortify
+        run: echo "pushed another workflow"
