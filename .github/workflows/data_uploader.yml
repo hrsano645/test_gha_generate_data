@@ -17,13 +17,13 @@ jobs:
 #     env:
 #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           repository: hrsano645/covid19-gen-datajson-shizuokapref
           ref: master
           fetch-depth: 0
-#           token: ${{ secrets.DATA_UPLOAD_PAT }}
-#           persist-credentials: false
+          token: ${{ secrets.DATA_UPLOAD_PAT }}
+          persist-credentials: false
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -58,12 +58,12 @@ jobs:
     steps:
       - name: check env
         run: echo ${{ env.DEVELOPMENT_BRANCH }}
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           ref: ${{ env.DEVELOPMENT_BRANCH }}
           fetch-depth: 0
-#           token: ${{ secrets.DATA_UPLOAD_PAT }}
-#           persist-credentials: false
+          token: ${{ secrets.DATA_UPLOAD_PAT }}
+          persist-credentials: false
       - name: Download data
         uses: actions/download-artifact@v1
         with:
