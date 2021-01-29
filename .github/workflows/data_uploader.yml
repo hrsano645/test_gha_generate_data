@@ -3,7 +3,7 @@ name: data uploader
 on:
   workflow_dispatch:
   # schedule:
-  #   - cron:  '0 */24 * * *'
+  #   - cron: '0 21 * * *'
 
 env:
     MAIN_BRANCH: main
@@ -63,8 +63,8 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: datajson
-      - name: recode commit time
-        run: echo `date` > data/auto_generate_time
+#       - name: recode commit time
+#         run: echo `date` > data/auto_generate_time
       - name: Commit files
         run: |
           cp -rp datajson/* data/
@@ -91,8 +91,8 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: datajson
-      - name: recode commit time
-        run: echo `date` > data/auto_generate_time
+#       - name: recode commit time
+#         run: echo `date` > data/auto_generate_time
       - name: Commit files
         run: |
           cp -rp datajson/* data/
