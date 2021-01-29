@@ -68,8 +68,8 @@ jobs:
       - name: Commit files
         run: |
           cp -rp datajson/* data/
-          git config --local user.email "hrsano645@users.noreply.github.com"
-          git config --local user.name "data updater"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add data/*
           git commit -m "Auto Update Data"
       - name: Push changes
